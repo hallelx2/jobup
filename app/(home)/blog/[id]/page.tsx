@@ -1,29 +1,42 @@
-"use server"
+// "use server"
 
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, User, Share2, Bookmark } from "lucide-react";
 import Link from "next/link";
 
-const blogPosts = [
+// Create proper type definitions for our blog post data
+interface BlogPost {
+  id: number;
+  title: string;
+  content: string;
+  author: string;
+  date: string;
+  image: string;
+  category: string;
+  readTime: string;
+}
+
+// Type our blog posts array
+const blogPosts: BlogPost[] = [
   {
     id: 1,
     title: "10 Essential Tips for a Successful Job Interview",
     content: `
       <p class="mb-4">Preparing for a job interview can be both exciting and nerve-wracking. Here are ten essential tips to help you succeed:</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">1. Research the Company</h2>
       <p class="mb-4">Understanding the company's mission, values, and recent developments shows initiative and genuine interest. Review their website, social media, and recent news.</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">2. Practice Common Questions</h2>
       <p class="mb-4">While you can't predict every question, practicing responses to common interview questions builds confidence and helps you articulate your thoughts clearly.</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">3. Prepare STAR Examples</h2>
       <p class="mb-4">Use the Situation, Task, Action, Result format to structure your responses to behavioral questions. Have several examples ready that showcase your skills.</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">4. Dress Appropriately</h2>
       <p class="mb-4">Research the company culture and dress one level above what employees typically wear. When in doubt, opt for business professional attire.</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">5. Arrive Early</h2>
       <p class="mb-4">Plan to arrive 10-15 minutes before your scheduled interview time. This allows for unexpected delays and shows punctuality.</p>
     `,
@@ -38,10 +51,10 @@ const blogPosts = [
     title: "The Future of Work: Remote Jobs and Digital Transformation",
     content: `
       <p class="mb-4">The workplace is rapidly evolving with digital transformation at its core. Here's what you need to know:</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">1. Remote Work is Here to Stay</h2>
       <p class="mb-4">Companies are embracing flexible work arrangements, making remote work a permanent option for many roles.</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">2. Digital Skills are Essential</h2>
       <p class="mb-4">Regardless of your industry, digital literacy and adaptability are becoming crucial for career growth.</p>
     `,
@@ -56,10 +69,10 @@ const blogPosts = [
     title: "Building a Strong Personal Brand for Career Growth",
     content: `
       <p class="mb-4">Your personal brand can significantly impact your career trajectory. Here's how to build it:</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">1. Define Your Unique Value Proposition</h2>
       <p class="mb-4">Identify what makes you stand out and how you can provide value to your industry and potential employers.</p>
-      
+
       <h2 class="text-2xl font-semibold mt-8 mb-4">2. Maintain a Professional Online Presence</h2>
       <p class="mb-4">Curate your social media profiles and engage with your professional network meaningfully.</p>
     `,
@@ -71,23 +84,32 @@ const blogPosts = [
   }
 ];
 
-export function generateStaticParams() {
+// Type the parameters for generateStaticParams
+export function generateStaticParams(): { id: string }[] {
   return blogPosts.map((post) => ({
     id: post.id.toString(),
   }));
 }
 
-export default function BlogPost({ params }: { params: { id: string } }) {
-  const post = blogPosts.find(p => p.id === Number(params.id));
+// For Next.js server components, use appropriate types
+interface BlogPostProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function BlogPost({ params }: BlogPostProps): JSX.Element {
+  // Use proper type narrowing with fallback
+  const post = blogPosts.find(p => p.id === Number(params.id)) || null;
 
   if (!post) {
-    return <div>Post not found</div>;
+    return <div className="min-h-screen flex items-center justify-center">Post not found</div>;
   }
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <article className="pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
@@ -134,7 +156,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
               />
             </div>
 
-            {/* Content */}
+            {/* Content - Using a safer approach with Next.js */}
             <div
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: post.content }}

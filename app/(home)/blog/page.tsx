@@ -37,7 +37,7 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-gradient-to-b from-primary/5 via-primary/10 to-background">
         <div className="container mx-auto px-4">
